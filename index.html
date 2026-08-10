@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta name="theme-color" content="#06131c">
+
+  <title>TUSCANY SHARK</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: #06131c;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+
+    /* =================================
+       SFONDO
+       ================================= */
+
+    .scene-image {
+      position: fixed;
+      inset: 0;
+      z-index: -5;
+
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(0, 170, 255, .18),
+          transparent 35%
+        ),
+        linear-gradient(
+          180deg,
+          #08283a,
+          #031019 70%,
+          #02070b
+        );
+    }
+
+    .dark-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+
+      background:
+        radial-gradient(
+          circle at center,
+          transparent,
+          rgba(0,0,0,.75)
+        );
+    }
+
+    .light {
+      position: fixed;
+      width: 350px;
+      height: 350px;
+      left: 50%;
+      top: 15%;
+
+      transform: translateX(-50%);
+
+      background: rgba(0, 200, 255, .12);
+      filter: blur(90px);
+      border-radius: 50%;
+
+      z-index: -3;
+    }
+
+    .fog {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+
+      background:
+        radial-gradient(
+          ellipse at bottom,
+          rgba(255,255,255,.06),
+          transparent 65%
+        );
+    }
+
+    .water-effect {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0,180,255,.08),
+          transparent 50%
+        );
+    }
+
+
+    /* =================================
+       SEZIONI
+       ================================= */
+
+    .section {
+      display: none;
+
+      min-height: 100vh;
+
+      width: 100%;
+      max-width: 950px;
+
+      margin: auto;
+
+      padding:
+        30px 18px
+        110px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+
+    /* =================================
+       HOME
+       ================================= */
+
+    .main-title {
+      text-align: center;
+
+      margin-top: 30px;
+      margin-bottom: 12px;
+
+      font-size:
+        clamp(32px, 8vw, 58px);
+
+      color: #00d9ff;
+
+      text-shadow:
+        0 0 15px rgba(0,217,255,.5),
+        0 0 35px rgba(0,217,255,.2);
+    }
+
+    .subtitle {
+      text-align: center;
+
+      color: #c9eaf5;
+
+      font-size: 18px;
+
+      margin-bottom: 35px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .country-card {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+
+      padding: 18px;
+
+      border:
+        1px solid rgba(255,255,255,.14);
+
+      border-radius: 20px;
+
+      background:
+        rgba(255,255,255,.07);
+
+      color: white;
+
+      cursor: pointer;
+
+      text-align: left;
+
+      transition:
+        transform .2s,
+        background .2s;
+    }
+
+    .country-card:hover {
+      transform: translateY(-2px);
+
+      background:
+        rgba(0,190,255,.14);
+    }
+
+    .flag {
+      font-size: 35px;
+      margin-right: 15px;
+    }
+
+    .country-info {
+      flex: 1;
+    }
+
+    .country-name {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .country-description {
+      margin-top: 5px;
+      color: #b9d8e2;
+    }
+
+    .arrow {
+      font-size: 28px;
+      color: #00cfff;
+    }
+
+
+    /* =================================
+       TITOLO
+       ================================= */
+
+    .country-title {
+      text-align: center;
+
+      font-size: 31px;
+      font-weight: bold;
+
+      margin-bottom: 25px;
+
+      color: #00d9ff;
+    }
+
+    .content h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .content > p {
+      color: #c8dce3;
+
+      line-height: 1.5;
+
+      margin-bottom: 20px;
+    }
+
+
+    /* =================================
+       PRODOTTI
+       ================================= */
+
+    .photos {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 18px;
+
+      margin-top: 25px;
+    }
+
+    .photo-card {
+      background:
+        rgba(255,255,255,.08);
+
+      border:
+        1px solid rgba(255,255,255,.15);
+
+      border-radius: 20px;
+
+      padding: 10px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 10px 35px rgba(0,0,0,.25);
+    }
+
+    .photo-card img {
+      width: 100%;
+
+      aspect-ratio: 1 / 1;
+
+      object-fit: cover;
+
+      display: block;
+
+      border-radius: 14px;
+    }
+
+    .photo-description {
+      margin-top: 12px;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+      color: #e4f8ff;
+    }
+
+    .photo-price {
+      margin-top: 8px;
+
+      font-size: 24px;
+
+      font-weight: bold;
+
+      color: #00d9ff;
+    }
+
+    .photo-button {
+      width: 100%;
+
+      margin-top: 12px;
+
+      padding: 13px 10px;
+
+      border: none;
+
+      border-radius: 12px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #00bfff,
+          #0077ff
+        );
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      transition: .2s;
+    }
+
+    .photo-button:active {
+      transform: scale(.97);
+    }
+
+
+    /* =================================
+       CARRELLO
+       ================================= */
+
+    .cart {
+      margin-top: 30px;
+
+      padding: 20px;
+
+      border-radius: 20px;
+
+      background:
+        rgba(0,0,0,.38);
+
+      border:
+        1px solid rgba(255,255,255,.15);
+    }
+
+    .cart h3 {
+      color: #00d9ff;
+
+      font-size: 23px;
+
+      margin-bottom: 15px;
+    }
+
+    #cartItems {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 10px;
+    }
+
+    .empty-cart {
+      text-align: center;
+
+      color: #9db5be;
+
+      padding: 12px;
+    }
+
+    .cart-item {
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 12px;
+
+      border-radius: 13px;
+
+      background:
+        rgba(255,255,255,.07);
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+    }
+
+    .cart-item-price {
+      color: #9fdceb;
+
+      margin-top: 4px;
+    }
+
+    .quantity {
+      display: flex;
+
+      align-items: center;
+
+      gap: 7px;
+    }
+
+    .quantity button {
+      width: 32px;
+      height: 32px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #087da8;
+
+      color: white;
+
+      font-size: 18px;
+
+      cursor: pointer;
+    }
+
+    .quantity span {
+      min-width: 22px;
+
+      text-align: center;
+
+      font-weight: bold;
+    }
+
+    .remove-button {
+      border: none;
+
+      background: #d93636;
+
+      color: white;
+
+      padding: 8px 10px;
+
+      border-radius: 8px;
+
+      cursor: pointer;
+    }
+
+    .cart-total {
+      display: flex;
+
+      justify-content: space-between;
+
+      margin-top: 18px;
+
+      padding-top: 15px;
+
+      border-top:
+        1px solid rgba(255,255,255,.15);
+
+      font-size: 21px;
+
+      font-weight: bold;
+    }
+
+    .checkout-button {
+      width: 100%;
+
+      margin-top: 15px;
+
+      padding: 15px;
+
+      border: none;
+
+      border-radius: 13px;
+
+      background: #18b957;
+
+      color: white;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    /* =================================
+       CARRELLO FISSO
+       ================================= */
+
+    .floating-cart {
+      position: fixed;
+
+      right: 18px;
+      bottom: 18px;
+
+      z-index: 100;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      padding: 13px 17px;
+
+      border: none;
+
+      border-radius: 30px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #00cfff,
+          #006eff
+        );
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      box-shadow:
+        0 8px 25px rgba(0,0,0,.4);
+
+      cursor: pointer;
+    }
+
+    #cartCount {
+      min-width: 22px;
+      height: 22px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background: white;
+
+      color: #006eff;
+
+      font-size: 12px;
+    }
+
+
+    /* =================================
+       BACK
+       ================================= */
+
+    .back {
+      display: block;
+
+      margin: 35px auto 0;
+
+      padding: 13px 20px;
+
+      border:
+        1px solid rgba(255,255,255,.2);
+
+      border-radius: 12px;
+
+      background:
+        rgba(255,255,255,.08);
+
+      color: white;
+
+      font-size: 15px;
+
+      cursor: pointer;
+    }
+
+
+    /* =================================
+       PANNELLO ADMIN
+       ================================= */
+
+    .admin {
+      margin-top: 35px;
+
+      padding: 20px;
+
+      border-radius: 20px;
+
+      background:
+        rgba(0,0,0,.4);
+
+      border:
+        1px solid rgba(255,255,255,.12);
+    }
+
+    .admin h3 {
+      color: #00d9ff;
+
+      margin-bottom: 15px;
+    }
+
+    .admin-note {
+      color: #a9c2ca;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+
+      margin-bottom: 15px;
+    }
+
+    .admin-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 10px;
+
+      margin-bottom: 10px;
+    }
+
+    .admin input,
+    .admin textarea {
+      width: 100%;
+
+      padding: 11px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background:
+        rgba(255,255,255,.1);
+
+      color: white;
+
+      outline: none;
+    }
+
+    .admin textarea {
+      min-height: 80px;
+
+      resize: vertical;
+    }
+
+    .admin button {
+      margin-top: 10px;
+
+      padding: 11px 15px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #087da8;
+
+      color: white;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .admin-divider {
+      height: 1px;
+
+      background:
+        rgba(255,255,255,.12);
+
+      margin: 20px 0;
+    }
+
+
+    /* =================================
+       MOBILE
+       ================================= */
+
+    @media (max-width: 600px) {
+
+      .section {
+        padding:
+          22px 14px
+          100px;
+      }
+
+      .main-title {
+        margin-top: 20px;
+      }
+
+      .photos {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-card img {
+        aspect-ratio: 16 / 11;
+      }
+
+      .cart-item {
+        flex-wrap: wrap;
+      }
+
+      .quantity {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .admin-row {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =================================
+       SFONDO
+       ================================= -->
+
+  <div class="scene-image"></div>
+  <div class="dark-overlay"></div>
+  <div class="light"></div>
+  <div class="fog"></div>
+  <div class="water-effect"></div>
+
+
+  <!-- =================================
+       HOME
+       ================================= -->
+
+  <section
+    id="home"
+    class="section active"
+  >
+
+    <h1 class="main-title">
+      🦈 TUSCANY SHARK
+    </h1>
+
+    <div class="subtitle">
+      Scegli la tua destinazione
+    </div>
+
+
+    <div class="menu">
+
+      <button
+        class="country-card"
+        onclick="openSection('italia')"
+      >
+
+        <div class="flag">
+          🇮🇹
+        </div>
+
+        <div class="country-info">
+
+          <div class="country-name">
+            Italia
+          </div>
+
+          <div class="country-description">
+            Scopri l'Italia
+          </div>
+
+        </div>
+
+        <div class="arrow">
+          →
+        </div>
+
+      </button>
+
+
+      <button
+        class="country-card"
+        onclick="openSection('spagna')"
+      >
+
+        <div class="flag">
+          🇪🇸
+        </div>
+
+        <div class="country-info">
+
+          <div class="country-name">
+            Spagna
+          </div>
+
+          <div class="country-description">
+            Scopri la Spagna
+          </div>
+
+        </div>
+
+        <div class="arrow">
+          →
+        </div>
+
+      </button>
+
+
+      <button
+        class="country-card"
+        onclick="openSection('america')"
+      >
+
+        <div class="flag">
+          🇺🇸
+        </div>
+
+        <div class="country-info">
+
+          <div class="country-name">
+            America
+          </div>
+
+          <div class="country-description">
+            Scopri l'America
+          </div>
+
+        </div>
+
+        <div class="arrow">
+          →
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <!-- =================================
+         ADMIN LOCALE
+         ================================= -->
+
+    <div class="admin">
+
+      <h3>
+        ⚙️ Gestione catalogo
+      </h3>
+
+      <div class="admin-note">
+        Le modifiche vengono salvate solamente
+        sul dispositivo/browser utilizzato.
+      </div>
+
+
+      <div class="admin-row">
+
+        <input
+          id="adminName1"
+          type="text"
+          placeholder="Nome prodotto 1"
+        >
+
+        <input
+          id="adminPrice1"
+          type="number"
+          placeholder="Prezzo 1"
+        >
+
+      </div>
+
+
+      <textarea
+        id="adminDesc1"
+        placeholder="Descrizione prodotto 1"
+      ></textarea>
+
+
+      <div class="admin-row">
+
+        <input
+          id="adminName2"
+          type="text"
+          placeholder="Nome prodotto 2"
+        >
+
+        <input
+          id="adminPrice2"
+          type="number"
+          placeholder="Prezzo 2"
+        >
+
+      </div>
+
+
+      <textarea
+        id="adminDesc2"
+        placeholder="Descrizione prodotto 2"
+      ></textarea>
+
+
+      <button onclick="saveProducts()">
+        💾 Salva catalogo
+      </button>
+
+      <button onclick="resetProducts()">
+        ↩️ Ripristina
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =================================
+       ITALIA
+       ================================= -->
+
+  <section
+    id="italia"
+    class="section"
+  >
+
+    <div class="country-title">
+      🇮🇹 Italia
+    </div>
+
+    <div class="content">
+
+      <h2>
+        Italia
+      </h2>
+
+      <p>
+        Questa è la sezione dedicata all'Italia.
+      </p>
+
+    </div>
+
+    <button
+      class="back"
+      onclick="goHome()"
+    >
+      ← Torna al menu
+    </button>
+
+  </section>
+
+
+  <!-- =================================
+       SPAGNA
+       ================================= -->
+
+  <section
+    id="spagna"
+    class="section"
+  >
+
+    <div class="country-title">
+      🇪🇸 Spagna
+    </div>
+
+    <div class="content">
+
+      <h2>
+        Spagna
+      </h2>
+
+      <p>
+        Questa è la sezione dedicata alla Spagna.
+      </p>
+
+    </div>
+
+    <button
+      class="back"
+      onclick="goHome()"
+    >
+      ← Torna al menu
+    </button>
+
+  </section>
+
+
+  <!-- =================================
+       AMERICA
+       ================================= -->
+
+  <section
+    id="america"
+    class="section"
+  >
+
+    <div class="country-title">
+      🇺🇸 America
+    </div>
+
+
+    <div class="content">
+
+      <h2>
+        Catalogo
+      </h2>
+
+      <p>
+        Consulta i prodotti e, se desideri,
+        aggiungili al carrello per richiedere
+        maggiori informazioni.
+      </p>
+
+
+      <div
+        id="photos"
+        class="photos"
+      ></div>
+
+
+      <!-- =================================
+           CARRELLO
+           ================================= -->
+
+      <div
+        id="cart"
+        class="cart"
+      >
+
+        <h3>
+          🛒 Il tuo carrello
+        </h3>
+
+
+        <div id="cartItems">
+
+          <div class="empty-cart">
+            Il carrello è vuoto.
+          </div>
+
+        </div>
+
+
+        <div class="cart-total">
+
+          <span>
+            Totale
+          </span>
+
+          <span id="cartTotal">
+            € 0
+          </span>
+
+        </div>
+
+
+        <button
+          class="checkout-button"
+          onclick="requestInfo()"
+        >
+          💬 Richiedi informazioni
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="back"
+      onclick="goHome()"
+    >
+      ← Torna al menu
+    </button>
+
+  </section>
+
+
+  <!-- =================================
+       CARRELLO FISSO
+       ================================= -->
+
+  <button
+    class="floating-cart"
+    onclick="scrollToCart()"
+  >
+
+    🛒 Carrello
+
+    <span id="cartCount">
+      0
+    </span>
+
+  </button>
+
+
+  <script>
+
+
+    /* =================================
+       PRODOTTI
+       ================================= */
+
+    const defaultProducts = [
+
+      {
+        id: 1,
+
+        name: "Vape americana",
+
+        description: "Vape americana",
+
+        price: 100,
+
+        image: "IMG_4252.png"
+      },
+
+
+      {
+        id: 2,
+
+        name: "Vape americana",
+
+        description: "Vape americana",
+
+        price: 100,
+
+        image: "IMG_4253.png"
+      }
+
+    ];
+
+
+    let products = loadProducts();
+
+    let cart = loadCart();
+
+
+    function loadProducts() {
+
+      const saved =
+        localStorage.getItem(
+          "tuscanySharkProducts"
+        );
+
+      if (!saved) {
+
+        return [...defaultProducts];
+
+      }
+
+      try {
+
+        return JSON.parse(saved);
+
+      } catch {
+
+        return [...defaultProducts];
+
+      }
+
+    }
+
+
+    function saveProducts() {
+
+      const product1 = {
+
+        id: 1,
+
+        name:
+          document.getElementById(
+            "adminName1"
+          ).value.trim()
+          || "Vape americana",
+
+        description:
+          document.getElementById(
+            "adminDesc1"
+          ).value.trim()
+          || "Vape americana",
+
+        price:
+          Number(
+            document.getElementById(
+              "adminPrice1"
+            ).value
+          ) || 0,
+
+        image: "IMG_4252.png"
+
+      };
+
+
+      const product2 = {
+
+        id: 2,
+
+        name:
+          document.getElementById(
+            "adminName2"
+          ).value.trim()
+          || "Vape americana",
+
+        description:
+          document.getElementById(
+            "adminDesc2"
+          ).value.trim()
+          || "Vape americana",
+
+        price:
+          Number(
+            document.getElementById(
+              "adminPrice2"
+            ).value
+          ) || 0,
+
+        image: "IMG_4253.png"
+
+      };
+
+
+      products = [
+        product1,
+        product2
+      ];
+
+
+      localStorage.setItem(
+        "tuscanySharkProducts",
+        JSON.stringify(products)
+      );
+
+
+      renderProducts();
+
+
+      alert(
+        "Catalogo salvato."
+      );
+
+    }
+
+
+    function resetProducts() {
+
+      products =
+        [...defaultProducts];
+
+
+      localStorage.setItem(
+        "tuscanySharkProducts",
+        JSON.stringify(products)
+      );
+
+
+      loadAdminFields();
+
+      renderProducts();
+
+
+      alert(
+        "Catalogo ripristinato."
+      );
+
+    }
+
+
+    function loadAdminFields() {
+
+      const p1 = products[0];
+      const p2 = products[1];
+
+
+      document.getElementById(
+        "adminName1"
+      ).value = p1.name;
+
+
+      document.getElementById(
+        "adminPrice1"
+      ).value = p1.price;
+
+
+      document.getElementById(
+        "adminDesc1"
+      ).value = p1.description;
+
+
+      document.getElementById(
+        "adminName2"
+      ).value = p2.name;
+
+
+      document.getElementById(
+        "adminPrice2"
+      ).value = p2.price;
+
+
+      document.getElementById(
+        "adminDesc2"
+      ).value = p2.description;
+
+    }
+
+
+    /* =================================
+       VISUALIZZA PRODOTTI
+       ================================= */
+
+    function renderProducts() {
+
+      const container =
+        document.getElementById(
+          "photos"
+        );
+
+
+      container.innerHTML = "";
+
+
+      products.forEach(product => {
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "photo-card";
+
+
+        card.innerHTML = `
+
+          <img
+            src="${product.image}"
+            alt="${escapeHtml(product.name)}"
+          >
+
+          <div class="photo-description">
+            ${escapeHtml(product.description)}
+          </div>
+
+          <div class="photo-price">
+            € ${formatPrice(product.price)}
+          </div>
+
+          <button
+            class="photo-button"
+            onclick="addToCart(${product.id})"
+          >
+            🛒 Aggiungi al carrello
+          </button>
+
+        `;
+
+
+        container.appendChild(card);
+
+      });
+
+    }
+
+
+    function escapeHtml(text) {
+
+      return String(text)
+
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    function formatPrice(price) {
+
+      return Number(price).toLocaleString(
+        "it-IT",
+        {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        }
+      );
+
+    }
+
+
+    /* =================================
+       CARRELLO
+       ================================= */
+
+    function loadCart() {
+
+      const saved =
+        localStorage.getItem(
+          "tuscanySharkCart"
+        );
+
+
+      if (!saved) {
+
+        return [];
+
+      }
+
+
+      try {
+
+        return JSON.parse(saved);
+
+      } catch {
+
+        return [];
+
+      }
+
+    }
+
+
+    function saveCart() {
+
+      localStorage.setItem(
+        "tuscanySharkCart",
+        JSON.stringify(cart)
+      );
+
+    }
+
+
+    function addToCart(productId) {
+
+      const product =
+        products.find(
+          p => p.id === productId
+        );
+
+
+      if (!product) {
+
+        return;
+
+      }
+
+
+      const existing =
+        cart.find(
+          item => item.id === productId
+        );
+
+
+      if (existing) {
+
+        existing.quantity++;
+
+      } else {
+
+        cart.push({
+
+          id: product.id,
+
+          name: product.name,
+
+          price: Number(product.price),
+
+          quantity: 1
+
+        });
+
+      }
+
+
+      saveCart();
+
+      updateCart();
+
+
+      alert(
+        "Prodotto aggiunto al carrello."
+      );
+
+    }
+
+
+    function changeQuantity(
+      productId,
+      amount
+    ) {
+
+      const item =
+        cart.find(
+          p => p.id === productId
+        );
+
+
+      if (!item) {
+
+        return;
+
+      }
+
+
+      item.quantity += amount;
+
+
+      if (item.quantity <= 0) {
+
+        cart =
+          cart.filter(
+            p => p.id !== productId
+          );
+
+      }
+
+
+      saveCart();
+
+      updateCart();
+
+    }
+
+
+    function removeFromCart(productId) {
+
+      cart =
+        cart.filter(
+          item => item.id !== productId
+        );
+
+
+      saveCart();
+
+      updateCart();
+
+    }
+
+
+    function clearCart() {
+
+      cart = [];
+
+      saveCart();
+
+      updateCart();
+
+    }
+
+
+    function updateCart() {
+
+      const container =
+        document.getElementById(
+          "cartItems"
+        );
+
+
+      const totalElement =
+        document.getElementById(
+          "cartTotal"
+        );
+
+
+      const countElement =
+        document.getElementById(
+          "cartCount"
+        );
+
+
+      container.innerHTML = "";
+
+
+      if (cart.length === 0) {
+
+        container.innerHTML =
+          `
+          <div class="empty-cart">
+            Il carrello è vuoto.
+          </div>
+          `;
+
+        totalElement.textContent =
+          "€ 0";
+
+        countElement.textContent =
+          "0";
+
+        return;
+
+      }
+
+
+      let total = 0;
+
+      let count = 0;
+
+
+      cart.forEach(item => {
+
+        const itemTotal =
+          item.price *
+          item.quantity;
+
+
+        total += itemTotal;
+
+        count += item.quantity;
+
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "cart-item";
+
+
+        div.innerHTML = `
+
+          <div class="cart-item-info">
+
+            <div class="cart-item-name">
+              ${escapeHtml(item.name)}
+            </div>
+
+            <div class="cart-item-price">
+              € ${formatPrice(item.price)}
+              × ${item.quantity}
+            </div>
+
+          </div>
+
+
+          <div class="quantity">
+
+            <button
+              onclick="changeQuantity(
+                ${item.id},
+                -1
+              )"
+            >
+              −
+            </button>
+
+            <span>
+              ${item.quantity}
+            </span>
+
+            <button
+              onclick="changeQuantity(
+                ${item.id},
+                1
+              )"
+            >
+              +
+            </button>
+
+          </div>
+
+
+          <button
+            class="remove-button"
+            onclick="removeFromCart(
+              ${item.id}
+            )"
+          >
+            ✕
+          </button>
+
+        `;
+
+
+        container.appendChild(div);
+
+      });
+
+
+      totalElement.textContent =
+        "€ " + formatPrice(total);
+
+
+      countElement.textContent =
+        count;
+
+    }
+
+
+    /* =================================
+       RICHIESTA INFORMAZIONI
+       ================================= */
+
+    function requestInfo() {
+
+      if (cart.length === 0) {
+
+        alert(
+          "Il carrello è vuoto."
+        );
+
+        return;
+
+      }
+
+
+      let message =
+        "Ciao, vorrei ricevere informazioni sui seguenti prodotti:\n\n";
+
+
+      let total = 0;
+
+
+      cart.forEach((item, index) => {
+
+        const itemTotal =
+          item.price *
+          item.quantity;
+
+
+        message +=
+          (index + 1) +
+          ". " +
+          item.name +
+          " — quantità: " +
+          item.quantity +
+          " — € " +
+          formatPrice(itemTotal) +
+          "\n";
+
+
+        total += itemTotal;
+
+      });
+
+
+      message +=
+        "\nTotale indicativo: € " +
+        formatPrice(total);
+
+
+      /*
+       * Copia il riepilogo.
+       */
+
+      if (
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+      ) {
+
+        navigator.clipboard
+          .writeText(message)
+          .then(() => {
+
+            openTelegram();
+
+          })
+          .catch(() => {
+
+            showMessageAndTelegram(
+              message
+            );
+
+          });
+
+      } else {
+
+        showMessageAndTelegram(
+          message
+        );
+
+      }
+
+    }
+
+
+    function openTelegram() {
+
+      alert(
+        "Riepilogo copiato negli appunti.\n\n" +
+        "Si aprirà Telegram: incolla il messaggio nella chat."
+      );
+
+
+      window.open(
+        "https://t.me/marXijuana",
+        "_blank"
+      );
+
+    }
+
+
+    function showMessageAndTelegram(
+      message
+    ) {
+
+      alert(
+        "Riepilogo della richiesta:\n\n" +
+        message +
+        "\n\nApri Telegram per inviarlo."
+      );
+
+
+      window.open(
+        "https://t.me/marXijuana",
+        "_blank"
+      );
+
+    }
+
+
+    /* =================================
+       NAVIGAZIONE
+       ================================= */
+
+    function openSection(
+      sectionId
+    ) {
+
+      document
+        .querySelectorAll(".section")
+        .forEach(section => {
+
+          section.classList.remove(
+            "active"
+          );
+
+        });
+
+
+      const target =
+        document.getElementById(
+          sectionId
+        );
+
+
+      if (target) {
+
+        target.classList.add(
+          "active"
+        );
+
+      }
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+    function goHome() {
+
+      openSection("home");
+
+    }
+
+
+    function scrollToCart() {
+
+      openSection("america");
+
+
+      setTimeout(() => {
+
+        document
+          .getElementById("cart")
+          .scrollIntoView({
+            behavior: "smooth"
+          });
+
+      }, 100);
+
+    }
+
+
+    /* =================================
+       AVVIO
+       ================================= */
+
+    loadAdminFields();
+
+    renderProducts();
+
+    updateCart();
+
+  </script>
+
+</body>
+
+</html>
