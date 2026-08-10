@@ -1,0 +1,244 @@
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Menu Paesi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+
+      /* SFONDO DELLA MINI APP */
+      background-image: url("IMG_4254.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+
+      color: #222;
+      min-height: 100vh;
+    }
+
+    .section {
+      display: none;
+      min-height: 100vh;
+      padding: 25px 20px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    #home {
+      text-align: center;
+      padding-top: 60px;
+    }
+
+    #home h1 {
+      font-size: 30px;
+      margin-bottom: 35px;
+      color: white;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .menu button {
+      border: none;
+      border-radius: 15px;
+      padding: 18px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .country-title {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 25px;
+      color: white;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .content h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .content p {
+      line-height: 1.6;
+    }
+
+    /* FOTO AMERICA */
+    .photos {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .photos img {
+      width: 100%;
+      display: block;
+      border-radius: 15px;
+      object-fit: cover;
+    }
+
+    .back {
+      display: block;
+      margin: 25px auto 0;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 17px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENU PRINCIPALE -->
+  <div id="home" class="section active">
+    <h1>🌍 Menu Paesi</h1>
+
+    <div class="menu">
+      <button onclick="openSection('italia')">
+        🇮🇹 Italia
+      </button>
+
+      <button onclick="openSection('spagna')">
+        🇪🇸 Spagna
+      </button>
+
+      <button onclick="openSection('america')">
+        🇺🇸 America
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ITALIA -->
+  <div id="italia" class="section">
+    <div class="country-title">🇮🇹 Italia</div>
+
+    <div class="content">
+      <h2>Italia</h2>
+
+      <p>
+        Benvenuto nella sezione dedicata all'Italia.
+      </p>
+
+      <p>
+        Qui potremo inserire successivamente tutte le informazioni,
+        categorie, link o funzioni che vuoi mostrare.
+      </p>
+    </div>
+
+    <button class="back" onclick="goHome()">
+      ← Torna al menu
+    </button>
+  </div>
+
+
+  <!-- SPAGNA -->
+  <div id="spagna" class="section">
+    <div class="country-title">🇪🇸 Spagna</div>
+
+    <div class="content">
+      <h2>Spagna</h2>
+
+      <p>
+        Benvenuto nella sezione dedicata alla Spagna.
+      </p>
+
+      <p>
+        Qui potremo inserire successivamente tutte le informazioni,
+        categorie, link o funzioni che vuoi mostrare.
+      </p>
+    </div>
+
+    <button class="back" onclick="goHome()">
+      ← Torna al menu
+    </button>
+  </div>
+
+
+  <!-- AMERICA -->
+  <div id="america" class="section">
+    <div class="country-title">🇺🇸 America</div>
+
+    <div class="content">
+      <h2>America</h2>
+
+      <p>
+        Benvenuto nella sezione dedicata all'America.
+      </p>
+
+      <!-- FOTO -->
+      <div class="photos">
+        <img src="IMG_4252.png" alt="America">
+        <img src="IMG_4253.png" alt="America">
+      </div>
+
+      <p>
+        Qui potremo inserire successivamente tutte le informazioni,
+        categorie, link o funzioni che vuoi mostrare.
+      </p>
+    </div>
+
+    <button class="back" onclick="goHome()">
+      ← Torna al menu
+    </button>
+  </div>
+
+
+  <script>
+    function openSection(sectionId) {
+      document.querySelectorAll('.section').forEach(function(section) {
+        section.classList.remove('active');
+      });
+
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    function goHome() {
+      document.querySelectorAll('.section').forEach(function(section) {
+        section.classList.remove('active');
+      });
+
+      document.getElementById('home').classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
+```
