@@ -10,28 +10,24 @@
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
-      min-height: 100vh;
+      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      color: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      background: var(--tg-theme-bg-color, #ffffff);
+      color: var(--tg-theme-text-color, #222222);
+      min-height: 100vh;
     }
 
     .container {
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px 20px;
     }
 
     h1 {
+      text-align: center;
       margin-bottom: 30px;
       font-size: 28px;
     }
@@ -47,28 +43,44 @@
       padding: 18px;
       border: none;
       border-radius: 14px;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
-      background: #2481cc;
-      color: white;
+      background: var(--tg-theme-button-color, #2481cc);
+      color: var(--tg-theme-button-text-color, #ffffff);
     }
 
     button:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
-    .result {
+    .section {
       display: none;
-      margin-top: 25px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .country-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .content {
       padding: 20px;
-      border-radius: 14px;
-      background: white;
+      border-radius: 16px;
+      background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+      margin-bottom: 20px;
+      line-height: 1.6;
     }
 
     .back {
-      margin-top: 15px;
-      background: #777;
+      margin-top: 10px;
+      background: transparent;
+      color: var(--tg-theme-link-color, #2481cc);
+      border: 1px solid var(--tg-theme-link-color, #2481cc);
     }
   </style>
 </head>
@@ -77,55 +89,128 @@
 
   <div class="container">
 
-    <h1>🌍 Scegli un Paese</h1>
+    <!-- MENU PRINCIPALE -->
+    <div id="home" class="section active">
+      <h1>🌍 Menu Paesi</h1>
 
-    <div class="menu" id="menu">
+      <div class="menu">
+        <button onclick="openSection('italia')">
+          🇮🇹 Italia
+        </button>
 
-      <button onclick="selectCountry('Spagna')">
-        🇪🇸 Spagna
-      </button>
+        <button onclick="openSection('spagna')">
+          🇪🇸 Spagna
+        </button>
 
-      <button onclick="selectCountry('Italia')">
-        🇮🇹 Italia
-      </button>
-
-      <button onclick="selectCountry('America')">
-        🇺🇸 America
-      </button>
-
+        <button onclick="openSection('america')">
+          🇺🇸 America
+        </button>
+      </div>
     </div>
 
-    <div class="result" id="result">
 
-      <h2 id="country"></h2>
+    <!-- ITALIA -->
+    <div id="italia" class="section">
+      <div class="country-title">🇮🇹 Italia</div>
 
-      <p style="margin-top: 10px;">
-        Hai selezionato questo Paese.
-      </p>
+      <div class="content">
+        <h2>Italia</h2>
+        <p>
+          Benvenuto nella sezione dedicata all'Italia.
+        </p>
+        <p>
+          Qui potremo inserire successivamente tutte le informazioni,
+          categorie, link o funzioni che vuoi mostrare.
+        </p>
+      </div>
 
-      <button class="back" onclick="goBack()">
+      <button class="back" onclick="goHome()">
         ← Torna al menu
       </button>
+    </div>
 
+
+    <!-- SPAGNA -->
+    <div id="spagna" class="section">
+      <div class="country-title">🇪🇸 Spagna</div>
+
+      <div class="content">
+        <h2>Spagna</h2>
+        <p>
+          Benvenuto nella sezione dedicata alla Spagna.
+        </p>
+        <p>
+          Qui potremo inserire successivamente tutte le informazioni,
+          categorie, link o funzioni che vuoi mostrare.
+        </p>
+      </div>
+
+      <button class="back" onclick="goHome()">
+        ← Torna al menu
+      </button>
+    </div>
+
+
+    <!-- AMERICA -->
+    <div id="america" class="section">
+      <div class="country-title">🇺🇸 America</div>
+
+      <div class="content">
+        <h2>America</h2>
+        <p>
+          Benvenuto nella sezione dedicata all'America.
+        </p>
+        <p>
+          Qui potremo inserire successivamente tutte le informazioni,
+          categorie, link o funzioni che vuoi mostrare.
+        </p>
+      </div>
+
+      <button class="back" onclick="goHome()">
+        ← Torna al menu
+      </button>
     </div>
 
   </div>
 
+
   <script>
+    // Inizializzazione Telegram Mini App
     const tg = window.Telegram.WebApp;
 
     tg.ready();
     tg.expand();
 
-    function selectCountry(country) {
-      document.getElementById("menu").style.display = "none";
-      document.getElementById("country").textContent = country;
-      document.getElementById("result").style.display = "block";
+
+    // Apertura di una sezione
+    function openSection(sectionId) {
+
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      document.getElementById(sectionId).classList.add('active');
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
 
-    function goBack() {
-      document.getElementById("result").style.display = "none";
-      document.getElementById("menu").style.display = "flex";
+
+    // Ritorno al menu principale
+    function goHome() {
+
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      document.getElementById('home').classList.add('active');
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   </script>
 
