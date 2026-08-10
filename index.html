@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Paesi</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 14px;
+      font-size: 19px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #2481cc;
+      color: white;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .result {
+      display: none;
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 14px;
+      background: white;
+    }
+
+    .back {
+      margin-top: 15px;
+      background: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🌍 Scegli un Paese</h1>
+
+    <div class="menu" id="menu">
+
+      <button onclick="selectCountry('Spagna')">
+        🇪🇸 Spagna
+      </button>
+
+      <button onclick="selectCountry('Italia')">
+        🇮🇹 Italia
+      </button>
+
+      <button onclick="selectCountry('America')">
+        🇺🇸 America
+      </button>
+
+    </div>
+
+    <div class="result" id="result">
+
+      <h2 id="country"></h2>
+
+      <p style="margin-top: 10px;">
+        Hai selezionato questo Paese.
+      </p>
+
+      <button class="back" onclick="goBack()">
+        ← Torna al menu
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+
+    tg.ready();
+    tg.expand();
+
+    function selectCountry(country) {
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("country").textContent = country;
+      document.getElementById("result").style.display = "block";
+    }
+
+    function goBack() {
+      document.getElementById("result").style.display = "none";
+      document.getElementById("menu").style.display = "flex";
+    }
+  </script>
+
+</body>
+</html>
