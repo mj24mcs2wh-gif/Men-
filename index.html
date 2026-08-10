@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Tuscany Shark</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #06141c;
+      color: white;
+    }
+
+    /* =========================
+       SFONDO ANIMATO
+       ========================= */
+
+    .scene {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      background: #06141c;
+    }
+
+    .scene-image {
+      position: absolute;
+      width: 115%;
+      height: 115%;
+      left: -7.5%;
+      top: -7.5%;
+
+      background-image: url("IMG_4254.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      animation: cameraMove 12s ease-in-out infinite alternate;
+      transform-origin: center center;
+    }
+
+    @keyframes cameraMove {
+      0% {
+        transform: scale(1) translate3d(0, 0, 0);
+      }
+
+      25% {
+        transform: scale(1.035) translate3d(-1%, 0.5%, 0);
+      }
+
+      50% {
+        transform: scale(1.07) translate3d(1%, -0.5%, 0);
+      }
+
+      75% {
+        transform: scale(1.04) translate3d(-0.5%, 1%, 0);
+      }
+
+      100% {
+        transform: scale(1.08) translate3d(0.5%, -0.5%, 0);
+      }
+    }
+
+    /* Oscillazione luminosa */
+    .scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(130, 220, 255, 0.10),
+          transparent 38%
+        );
+
+      animation: atmosphere 4s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes atmosphere {
+      from {
+        opacity: 0.3;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Scuro sopra la foto */
+    .dark-overlay {
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.18),
+          rgba(0, 0, 0, 0.04) 35%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+
+      pointer-events: none;
+    }
+
+    /* =========================
+       LUCE
+       ========================= */
+
+    .light {
+      position: absolute;
+
+      width: 380px;
+      height: 380px;
+
+      top: 10%;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(160, 225, 255, 0.22),
+          rgba(160, 225, 255, 0.05) 40%,
+          transparent 70%
+        );
+
+      filter: blur(18px);
+
+      animation: lightPulse 4s ease-in-out infinite alternate;
+
+      pointer-events: none;
+    }
+
+    @keyframes lightPulse {
+      from {
+        opacity: 0.35;
+        transform: translateX(-50%) scale(0.8);
+      }
+
+      to {
+        opacity: 0.9;
+        transform: translateX(-50%) scale(1.15);
+      }
+    }
+
+    /* =========================
+       NEBBIA
+       ========================= */
+
+    .fog {
+      position: absolute;
+
+      width: 180%;
+      height: 35%;
+
+      left: -40%;
+      bottom: 5%;
+
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0.06) 35%,
+          transparent 70%
+        );
+
+      filter: blur(30px);
+
+      opacity: 0.55;
+
+      animation: fogMove 10s ease-in-out infinite alternate;
+
+      pointer-events: none;
+    }
+
+    @keyframes fogMove {
+      from {
+        transform: translateX(-8%) scaleY(1);
+      }
+
+      to {
+        transform: translateX(8%) scaleY(1.25);
+      }
+    }
+
+    /* =========================
+       ACQUA IN MOVIMENTO
+       ========================= */
+
+    .water-effect {
+      position: absolute;
+
+      left: -10%;
+      bottom: -3%;
+
+      width: 120%;
+      height: 30%;
+
+      opacity: 0.38;
+
+      background:
+        repeating-linear-gradient(
+          -8deg,
+          transparent 0,
+          transparent 13px,
+          rgba(255,255,255,0.13) 14px,
+          transparent 19px
+        );
+
+      animation: waterMove 2.8s linear infinite;
+
+      pointer-events: none;
+    }
+
+    @keyframes waterMove {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-55px);
+      }
+    }
+
+    /* =========================
+       SPRUZZI
+       ========================= */
+
+    .particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+
+      width: 4px;
+      height: 4px;
+
+      border-radius: 50%;
+
+      background: rgba(255,255,255,0.75);
+
+      box-shadow:
+        0 0 8px rgba(255,255,255,0.5);
+
+      animation: splash 2.5s linear infinite;
+    }
+
+    .particle:nth-child(1) {
+      left: 12%;
+      bottom: 18%;
+      animation-delay: 0s;
+    }
+
+    .particle:nth-child(2) {
+      left: 22%;
+      bottom: 13%;
+      animation-delay: 0.7s;
+    }
+
+    .particle:nth-child(3) {
+      left: 35%;
+      bottom: 21%;
+      animation-delay: 1.2s;
+    }
+
+    .particle:nth-child(4) {
+      left: 48%;
+      bottom: 15%;
+      animation-delay: 0.3s;
+    }
+
+    .particle:nth-child(5) {
+      left: 60%;
+      bottom: 20%;
+      animation-delay: 1.5s;
+    }
+
+    .particle:nth-child(6) {
+      left: 74%;
+      bottom: 15%;
+      animation-delay: 0.9s;
+    }
+
+    .particle:nth-child(7) {
+      left: 84%;
+      bottom: 21%;
+      animation-delay: 2s;
+    }
+
+    .particle:nth-child(8) {
+      left: 55%;
+      bottom: 10%;
+      animation-delay: 1.7s;
+    }
+
+    @keyframes splash {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.5);
+      }
+
+      25% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-120px) scale(1.5);
+      }
+    }
+
+    /* =========================
+       APP
+       ========================= */
+
+    .app {
+      position: relative;
+      z-index: 5;
+
+      min-height: 100vh;
+
+      padding: 45px 20px 40px;
+    }
+
+    /* =========================
+       SEZIONI
+       ========================= */
+
+    .section {
+      display: none;
+
+      min-height: calc(100vh - 80px);
+
+      animation: pageIn 0.55s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* =========================
+       HOME
+       ========================= */
+
+    #home {
+      text-align: center;
+    }
+
+    .main-title {
+      margin: 0;
+
+      font-size: clamp(30px, 9vw, 46px);
+      font-weight: 900;
+      letter-spacing: 1px;
+
+      text-shadow:
+        0 4px 18px rgba(0,0,0,0.85);
+
+      animation: titleIn 1s ease both;
+    }
+
+    .main-title span {
+      display: inline-block;
+      animation: titleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes titleIn {
+      from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes titleFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      margin-bottom: 30px;
+
+      font-size: 15px;
+
+      color: rgba(255,255,255,0.88);
+
+      text-shadow:
+        0 2px 8px rgba(0,0,0,0.8);
+
+      animation: fadeUp 1s 0.2s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================
+       MENU
+       ========================= */
+
+    .menu {
+      width: 100%;
+      max-width: 430px;
+
+      margin: 0 auto;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 17px;
+    }
+
+    /* =========================
+       CARD
+       ========================= */
+
+    .country-card {
+      position: relative;
+
+      width: 100%;
+      min-height: 112px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 15px 18px;
+
+      border: 1px solid rgba(255,255,255,0.35);
+
+      border-radius: 25px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.23),
+          rgba(255,255,255,0.08)
+        );
+
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+
+      color: white;
+
+      box-shadow:
+        0 15px 40px rgba(0,0,0,0.42),
+        inset 0 1px 2px rgba(255,255,255,0.35);
+
+      cursor: pointer;
+
+      overflow: hidden;
+
+      opacity: 0;
+
+      animation:
+        cardIn 0.7s cubic-bezier(.2,.8,.2,1) forwards;
+
+      transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .country-card:nth-child(1) {
+      animation-delay: 0.35s;
+    }
+
+    .country-card:nth-child(2) {
+      animation-delay: 0.55s;
+    }
+
+    .country-card:nth-child(3) {
+      animation-delay: 0.75s;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateX(-70px) rotate(-2deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) rotate(0);
+      }
+    }
+
+    /* Riflesso */
+    .country-card::before {
+      content: "";
+
+      position: absolute;
+
+      top: -20%;
+      left: -100%;
+
+      width: 65%;
+      height: 140%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,0.4),
+          transparent
+        );
+
+      transform: rotate(15deg);
+
+      animation:
+        shine 4.5s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        left: -100%;
+      }
+
+      35%, 100% {
+        left: 150%;
+      }
+    }
+
+    .country-card:active {
+      transform: scale(0.94);
+      background: rgba(255,255,255,0.30);
+    }
+
+    /* =========================
+       BANDIERA
+       ========================= */
+
+    .flag {
+      width: 76px;
+      height: 63px;
+
+      flex-shrink: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 17px;
+
+      background:
+        rgba(255,255,255,0.14);
+
+      box-shadow:
+        0 8px 20px rgba(0,0,0,0.35),
+        inset 0 1px 2px rgba(255,255,255,0.35);
+
+      font-size: 46px;
+
+      animation:
+        flagMove 3s ease-in-out infinite;
+    }
+
+    @keyframes flagMove {
+      0%, 100% {
+        transform: rotate(0deg) translateY(0);
+      }
+
+      50% {
+        transform: rotate(2deg) translateY(-4px);
+      }
+    }
+
+    /* =========================
+       TESTO
+       ========================= */
+
+    .country-info {
+      flex: 1;
+
+      margin-left: 16px;
+
+      text-align: left;
+
+      position: relative;
+      z-index: 2;
+    }
+
+    .country-name {
+      font-size: 23px;
+      font-weight: 900;
+
+      text-shadow:
+        0 3px 9px rgba(0,0,0,0.65);
+    }
+
+    .country-description {
+      margin-top: 4px;
+
+      font-size: 13px;
+
+      color: rgba(255,255,255,0.82);
+    }
+
+    .arrow {
+      font-size: 29px;
+
+      opacity: 0.85;
+
+      transition:
+        transform 0.25s ease;
+    }
+
+    .country-card:active .arrow {
+      transform:
+        translateX(8px)
+        scale(1.2);
+    }
+
+    /* =========================
+       PAGINE INTERNE
+       ========================= */
+
+    .country-title {
+      text-align: center;
+
+      margin-bottom: 25px;
+
+      font-size: 34px;
+      font-weight: 900;
+
+      text-shadow:
+        0 4px 15px rgba(0,0,0,0.8);
+    }
+
+    .content {
+      width: 100%;
+      max-width: 600px;
+
+      margin: 0 auto;
+
+      padding: 24px;
+
+      border-radius: 24px;
+
+      background:
+        rgba(255,255,255,0.92);
+
+      color: #222;
+
+      box-shadow:
+        0 15px 40px rgba(0,0,0,0.35);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .content h2 {
+      margin-top: 0;
+
+      text-align: center;
+
+      font-size: 25px;
+    }
+
+    .content p {
+      font-size: 16px;
+
+      line-height: 1.65;
+    }
+
+    /* =========================
+       FOTO AMERICA
+       ========================= */
+
+    .photos {
+      display: flex;
+      flex-direction: column;
+
+      gap: 15px;
+
+      margin: 20px 0;
+    }
+
+    .photos img {
+      width: 100%;
+
+      display: block;
+
+      border-radius: 18px;
+
+      box-shadow:
+        0 8px 25px rgba(0,0,0,0.35);
+
+      transition:
+        transform 0.3s ease;
+    }
+
+    .photos img:active {
+      transform: scale(0.97);
+    }
+
+    /* =========================
+       INDIETRO
+       ========================= */
+
+    .back {
+      display: block;
+
+      margin: 25px auto 0;
+
+      padding: 14px 25px;
+
+      border: 1px solid rgba(255,255,255,0.35);
+
+      border-radius: 16px;
+
+      background:
+        rgba(255,255,255,0.16);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      color: white;
+
+      font-size: 16px;
+      font-weight: 800;
+
+      box-shadow:
+        0 8px 25px rgba(0,0,0,0.30);
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .back:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.28);
+    }
+
+    /* =========================
+       TELEFONI PICCOLI
+       ========================= */
+
+    @media (max-width: 380px) {
+
+      .app {
+        padding-top: 30px;
+      }
+
+      .main-title {
+        font-size: 29px;
+      }
+
+      .country-card {
+        min-height: 102px;
+        padding: 14px;
+      }
+
+      .flag {
+        width: 65px;
+        height: 55px;
+        font-size: 40px;
+      }
+
+      .country-info {
+        margin-left: 13px;
+      }
+
+      .country-name {
+        font-size: 20px;
+      }
+
+      .country-description {
+        font-size: 12px;
+      }
+
+      .arrow {
+        font-size: 23px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       SCENA
+       ========================= -->
+
+  <div class="scene">
+
+    <div class="scene-image"></div>
+
+    <div class="dark-overlay"></div>
+
+    <div class="light"></div>
+
+    <div class="fog"></div>
+
+    <div class="water-effect"></div>
+
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       APP
+       ========================= -->
+
+  <main class="app">
+
+
+    <!-- HOME -->
+
+    <section id="home" class="section active">
+
+      <h1 class="main-title">
+        <span>🦈 TUSCANY SHARK</span>
+      </h1>
+
+      <div class="subtitle">
+        Scegli la tua destinazione
+      </div>
+
+
+      <div class="menu">
+
+
+        <!-- ITALIA -->
+
+        <button
+          class="country-card"
+          onclick="openSection('italia')"
+        >
+
+          <div class="flag">
+            🇮🇹
+          </div>
+
+          <div class="country-info">
+
+            <div class="country-name">
+              Italia
+            </div>
+
+            <div class="country-description">
+              Scopri l'Italia
+            </div>
+
+          </div>
+
+          <div class="arrow">
+            →
+          </div>
+
+        </button>
+
+
+        <!-- SPAGNA -->
+
+        <button
+          class="country-card"
+          onclick="openSection('spagna')"
+        >
+
+          <div class="flag">
+            🇪🇸
+          </div>
+
+          <div class="country-info">
+
+            <div class="country-name">
+              Spagna
+            </div>
+
+            <div class="country-description">
+              Scopri la Spagna
+            </div>
+
+          </div>
+
+          <div class="arrow">
+            →
+          </div>
+
+        </button>
+
+
+        <!-- AMERICA -->
+
+        <button
+          class="country-card"
+          onclick="openSection('america')"
+        >
+
+          <div class="flag">
+            🇺🇸
+          </div>
+
+          <div class="country-info">
+
+            <div class="country-name">
+              America
+            </div>
+
+            <div class="country-description">
+              Scopri l'America
+            </div>
+
+          </div>
+
+          <div class="arrow">
+            →
+          </div>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ITALIA -->
+
+    <section id="italia" class="section">
+
+      <div class="country-title">
+        🇮🇹 Italia
+      </div>
+
+      <div class="content">
+
+        <h2>Italia</h2>
+
+        <p>
+          Benvenuto nella sezione dedicata all'Italia.
+        </p>
+
+        <p>
+          Qui potremo aggiungere categorie,
+          informazioni, link e tutte le funzioni
+          della tua mini app.
+        </p>
+
+      </div>
+
+      <button
+        class="back"
+        onclick="goHome()"
+      >
+        ← Torna al menu
+      </button>
+
+    </section>
+
+
+    <!-- SPAGNA -->
+
+    <section id="spagna" class="section">
+
+      <div class="country-title">
+        🇪🇸 Spagna
+      </div>
+
+      <div class="content">
+
+        <h2>Spagna</h2>
+
+        <p>
+          Benvenuto nella sezione dedicata alla Spagna.
+        </p>
+
+        <p>
+          Qui potremo aggiungere categorie,
+          informazioni, link e tutte le funzioni
+          della tua mini app.
+        </p>
+
+      </div>
+
+      <button
+        class="back"
+        onclick="goHome()"
+      >
+        ← Torna al menu
+      </button>
+
+    </section>
+
+
+    <!-- AMERICA -->
+
+    <section id="america" class="section">
+
+      <div class="country-title">
+        🇺🇸 America
+      </div>
+
+      <div class="content">
+
+        <h2>America</h2>
+
+        <div class="photos">
+
+          <img
+            src="IMG_4252.png"
+            alt="America"
+          >
+
+          <img
+            src="IMG_4253.png"
+            alt="America"
+          >
+
+        </div>
+
+        <p>
+          Qui potremo aggiungere categorie,
+          informazioni, link e tutte le funzioni
+          della tua mini app.
+        </p>
+
+      </div>
+
+      <button
+        class="back"
+        onclick="goHome()"
+      >
+        ← Torna al menu
+      </button>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       JAVASCRIPT
+       ========================= -->
+
+  <script>
+
+    function openSection(sectionId) {
+
+      document
+        .querySelectorAll(".section")
+        .forEach(function(section) {
+          section.classList.remove("active");
+        });
+
+      const selectedSection =
+        document.getElementById(sectionId);
+
+      if (selectedSection) {
+        selectedSection.classList.add("active");
+      }
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+
+    function goHome() {
+
+      document
+        .querySelectorAll(".section")
+        .forEach(function(section) {
+          section.classList.remove("active");
+        });
+
+      document
+        .getElementById("home")
+        .classList.add("active");
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+  </script>
+
+</body>
+</html>
