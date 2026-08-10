@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>TUSCANY SHARK</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: #06131c;
+      overflow-x: hidden;
+    }
+
+    .scene-image {
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(
+          rgba(0, 20, 35, 0.65),
+          rgba(0, 5, 15, 0.9)
+        );
+      z-index: -5;
+    }
+
+    .dark-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(
+          circle at center,
+          transparent 0%,
+          rgba(0, 0, 0, 0.7) 100%
+        );
+      z-index: -4;
+    }
+
+    .light {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      left: 50%;
+      top: 25%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 180, 255, 0.12);
+      filter: blur(80px);
+      border-radius: 50%;
+      z-index: -3;
+    }
+
+    .fog {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(
+          ellipse at bottom,
+          rgba(255,255,255,0.06),
+          transparent 65%
+        );
+      z-index: -2;
+    }
+
+    .water-effect {
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0, 170, 255, 0.08),
+          transparent 50%
+        );
+      z-index: -1;
+    }
+
+    .section {
+      display: none;
+      min-height: 100vh;
+      padding: 35px 20px 100px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .main-title {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      font-size: clamp(30px, 8vw, 55px);
+      color: #00cfff;
+      text-shadow:
+        0 0 15px rgba(0, 207, 255, 0.6);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 18px;
+      color: #c9eaf5;
+      margin-bottom: 35px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .country-card {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.2s;
+    }
+
+    .country-card:hover {
+      transform: translateY(-2px);
+      background: rgba(0, 190, 255, 0.15);
+    }
+
+    .flag {
+      font-size: 35px;
+      margin-right: 15px;
+    }
+
+    .country-info {
+      flex: 1;
+    }
+
+    .country-name {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .country-description {
+      margin-top: 5px;
+      color: #b9d8e2;
+    }
+
+    .arrow {
+      font-size: 28px;
+      color: #00cfff;
+    }
+
+    .country-title {
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #00cfff;
+    }
+
+    .content h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .content p {
+      color: #c8dce3;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .photos {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 25px;
+    }
+
+    .photo-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 10px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+
+    .photo-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border-radius: 14px;
+    }
+
+    .photo-description {
+      margin-top: 12px;
+      font-size: 17px;
+      color: #e4f8ff;
+      font-weight: bold;
+    }
+
+    .photo-price {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #00d9ff;
+    }
+
+    .photo-button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 13px 10px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #00bfff, #0077ff);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .photo-button:active {
+      transform: scale(0.97);
+    }
+
+    .cart {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .cart h3 {
+      font-size: 23px;
+      margin-bottom: 15px;
+      color: #00d9ff;
+    }
+
+    #cartItems {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 12px;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .remove-button {
+      border: none;
+      background: #e53935;
+      color: white;
+      padding: 7px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 18px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .checkout-button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 15px;
+      border: none;
+      border-radius: 13px;
+      background: #18b957;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .empty-cart {
+      color: #9db5be;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .back {
+      display: block;
+      margin: 35px auto 0;
+      padding: 13px 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+
+      .section {
+        padding: 25px 15px 80px;
+      }
+
+      .photos {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-card img {
+        aspect-ratio: 16 / 11;
+      }
+
+      .main-title {
+        margin-top: 25px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="scene-image"></div>
+  <div class="dark-overlay"></div>
+  <div class="light"></div>
+  <div class="fog"></div>
+  <div class="water-effect"></div>
+
+
+  <!-- ================================
+       MENU PRINCIPALE
+       ================================ -->
+
+  <section id="home" class="section active">
+
+    <h1 class="main-title">
+      🦈 TUSCANY SHARK
+    </h1>
+
+    <div class="subtitle">
+      Scegli la tua destinazione
+    </div>
+
+    <div class="menu">
+
+      <button
+        class="country-card"
+        onclick="openSection('italia')"
+      >
+
+        <div class="flag">🇮🇹</div>
+
+        <div class="country-info">
+
+          <div class="country-name">
+            Italia
+          </div>
+
+          <div class="country-description">
+            Scopri l'Italia
+          </div>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+      </button>
+
+
+      <button
+        class="country-card"
+        onclick="openSection('spagna')"
+      >
+
+        <div class="flag">🇪🇸</div>
+
+        <div class="country-info">
+
+          <div class="country-name">
+            Spagna
+          </div>
+
+          <div class="country-description">
+            Scopri la Spagna
+          </div>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+      </button>
+
+
+      <button
+        class="country-card"
+        onclick="openSection('america')"
+      >
+
+        <div class="flag">🇺🇸</div>
+
+        <div class="country-info">
+
+          <div class="country-name">
+            America
+          </div>
+
+          <div class="country-description">
+            Scopri l'America
+          </div>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================================
+       ITALIA
+       ================================ -->
+
+  <section id="italia" class="section">
+
+    <div class="country-title">
+      🇮🇹 Italia
+    </div>
+
+    <div class="content">
+
+      <h2>Italia</h2>
+
+      <p>
+        Questa è la sezione dedicata all'Italia.
+      </p>
+
+    </div>
+
+    <button
+      class="back"
+      onclick="goHome()"
+    >
+      ← Torna al menu
+    </button>
+
+  </section>
+
+
+  <!-- ================================
+       SPAGNA
+       ================================ -->
+
+  <section id="spagna" class="section">
+
+    <div class="country-title">
+      🇪🇸 Spagna
+    </div>
+
+    <div class="content">
+
+      <h2>Spagna</h2>
+
+      <p>
+        Questa è la sezione dedicata alla Spagna.
+      </p>
+
+    </div>
+
+    <button
+      class="back"
+      onclick="goHome()"
+    >
+      ← Torna al menu
+    </button>
+
+  </section>
+
+
+  <!-- ================================
+       AMERICA
+       ================================ -->
+
+  <section id="america" class="section">
+
+    <div class="country-title">
+      🇺🇸 America
+    </div>
+
+    <div class="content">
+
+      <h2>
+        Prodotti americani
+      </h2>
+
+      <p>
+        Scopri i nostri prodotti disponibili.
+      </p>
+
+
+      <div class="photos">
+
+
+        <!-- FOTO 1 -->
+
+        <div class="photo-card">
+
+          <img
+            src="IMG_4252.png"
+            alt="Vape americana"
+          >
+
+          <div class="photo-description">
+            Vape americana
+          </div>
+
+          <div class="photo-price">
+            € 100
+          </div>
+
+          <button
+            class="photo-button"
+            onclick="addToCart('Vape americana - Foto 1', 100)"
+          >
+            🛒 Aggiungi al carrello
+          </button>
+
+        </div>
+
+
+        <!-- FOTO 2 -->
+
+        <div class="photo-card">
+
+          <img
+            src="IMG_4253.png"
+            alt="Vape americana"
+          >
+
+          <div class="photo-description">
+            Vape americana
+          </div>
+
+          <div class="photo-price">
+            € 100
+          </div>
+
+          <button
+            class="photo-button"
+            onclick="addToCart('Vape americana - Foto 2', 100)"
+          >
+            🛒 Aggiungi al carrello
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ================================
+           CARRELLO
+           ================================ -->
+
+      <div class="cart">
+
+        <h3>
+          🛒 Il tuo carrello
+        </h3>
+
+        <div id="cartItems">
+
+          <div class="empty-cart">
+            Il carrello è vuoto.
+          </div>
+
+        </div>
+
+        <div class="cart-total">
+
+          <span>
+            Totale
+          </span>
+
+          <span id="cartTotal">
+            € 0
+          </span>
+
+        </div>
+
+        <button
+          class="checkout-button"
+          onclick="requestInfo()"
+        >
+          💬 Richiedi informazioni
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="back"
+      onclick="goHome()"
+    >
+      ← Torna al menu
+    </button>
+
+  </section>
+
+
+  <script>
+
+    /* ================================
+       NAVIGAZIONE
+       ================================ */
+
+    function openSection(sectionId) {
+
+      document
+        .querySelectorAll('.section')
+        .forEach(section => {
+
+          section.classList.remove('active');
+
+        });
+
+      document
+        .getElementById(sectionId)
+        .classList.add('active');
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+    }
+
+
+    function goHome() {
+
+      openSection('home');
+
+    }
+
+
+    /* ================================
+       CARRELLO
+       ================================ */
+
+    let cart = [];
+
+
+    function addToCart(name, price) {
+
+      cart.push({
+        name: name,
+        price: price
+      });
+
+      updateCart();
+
+    }
+
+
+    function removeFromCart(index) {
+
+      cart.splice(index, 1);
+
+      updateCart();
+
+    }
+
+
+    function updateCart() {
+
+      const cartItems =
+        document.getElementById('cartItems');
+
+      const cartTotal =
+        document.getElementById('cartTotal');
+
+      cartItems.innerHTML = '';
+
+      if (cart.length === 0) {
+
+        cartItems.innerHTML =
+          '<div class="empty-cart">Il carrello è vuoto.</div>';
+
+        cartTotal.textContent = '€ 0';
+
+        return;
+
+      }
+
+      let total = 0;
+
+      cart.forEach((item, index) => {
+
+        total += item.price;
+
+        const div =
+          document.createElement('div');
+
+        div.className = 'cart-item';
+
+        div.innerHTML = `
+
+          <div class="cart-item-info">
+
+            <strong>
+              ${item.name}
+            </strong>
+
+            <br>
+
+            € ${item.price}
+
+          </div>
+
+          <button
+            class="remove-button"
+            onclick="removeFromCart(${index})"
+          >
+            ✕
+          </button>
+
+        `;
+
+        cartItems.appendChild(div);
+
+      });
+
+      cartTotal.textContent =
+        '€ ' + total;
+
+    }
+
+
+    /* ================================
+       RICHIESTA INFORMAZIONI
+       ================================ */
+
+    function requestInfo() {
+
+      if (cart.length === 0) {
+
+        alert(
+          'Il carrello è vuoto.'
+        );
+
+        return;
+
+      }
+
+
+      let message =
+        'Ciao, vorrei ricevere informazioni sui seguenti prodotti:\n\n';
+
+
+      let total = 0;
+
+
+      cart.forEach((item, index) => {
+
+        message +=
+          (index + 1) +
+          '. ' +
+          item.name +
+          ' — € ' +
+          item.price +
+          '\n';
+
+        total += item.price;
+
+      });
+
+
+      message +=
+        '\nTotale indicativo: € ' +
+        total;
+
+
+      /*
+       * Copia il messaggio negli appunti
+       */
+
+      navigator.clipboard
+        .writeText(message)
+        .then(() => {
+
+          alert(
+            'Messaggio preparato e copiato!\n\n' +
+            'Ora si aprirà Telegram. ' +
+            'Incolla il messaggio nella chat e invialo.'
+          );
+
+          window.open(
+            'https://t.me/marXijuana',
+            '_blank'
+          );
+
+        })
+        .catch(() => {
+
+          alert(
+            'Apri Telegram e invia manualmente ' +
+            'la richiesta di informazioni.'
+          );
+
+          window.open(
+            'https://t.me/marXijuana',
+            '_blank'
+          );
+
+        });
+
+    }
+
+  </script>
+
+
+</body>
+
+</html>
